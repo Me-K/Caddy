@@ -37,7 +37,8 @@ import android.util.Log;
 public class NotesDbAdapter {
 
     public static final String KEY_TITLE = "title";
-    public static final String KEY_BODY = "body";
+    public static final String KEY_PRODUCT = "product";
+    public static final int KEY_QUANTITY= 1;
     public static final String KEY_ROWID = "_id";
 
     private static final String TAG = "NotesDbAdapter";
@@ -48,8 +49,7 @@ public class NotesDbAdapter {
      * Database creation sql statement
      */
     private static final String DATABASE_CREATE =
-            "create table notes (_id integer primary key autoincrement, "
-                    + "title text not null, body text not null);";
+            "create table notes (_id integer primary key autoincrement, "+ "title text not null, body text not null);";
 
     private static final String DATABASE_NAME = "data";
     private static final String DATABASE_TABLE = "notes";
