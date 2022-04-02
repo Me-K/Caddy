@@ -38,7 +38,7 @@ public class NotesDbAdapter {
 
     public static final String KEY_TITLE = "nom_produit";
     public static final String KEY_ROWID = "_id";
-    public static final String KEY_QUANTITY="quantité"
+    public static final String KEY_QUANTITY="quantité";
 
     private static final String TAG = "NotesDbAdapter";
     private DatabaseHelper mDbHelper;
