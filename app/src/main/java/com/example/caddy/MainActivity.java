@@ -22,12 +22,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
-    private EditText edit;//champ d'ajout
+    private EditText edit;
     private ListView list;
-    private Button button;// bouton qui affiche le champ d'ajout
-    private Button btnAdd;// bouton de confirmation d'ajout
+    private Button button;
+    private Button btnAdd;
     private NotesDbAdapter db;
-    private TextView text;//sert à barrer les éléments de la liste
+    private TextView text;
     private long currentID;
     private boolean editOuvert=false;//sert à savoir si l'ajout d'élément dans la liste est possible ou non
 
