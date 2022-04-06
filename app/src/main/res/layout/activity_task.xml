@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstFragment">
+    tools:context=".TaskActivity">
 
-    <ListView
-        android:id="@+id/list"
+    <TextView
+        android:id="@+id/taskName"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-    </ListView>
-
+        android:layout_height="48dp"
+        android:ems="10"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="32sp"
+        tools:layout_editor_absoluteX="103dp"
+        tools:layout_editor_absoluteY="337dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,76 +1,182 @@
 package com.example.caddy;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.graphics.Paint;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
+public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.caddy.databinding.ActivityMainBinding;
-
-import android.view.Menu;
-import android.view.MenuItem;
-
-public class MainActivity extends AppCompatActivity {
-
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
+    private EditText edit;
+    private ListView list;
+    private Button button;
+    private Button btnAdd;
+    private NotesDbAdapter db;
+    private TextView text;
+    private long currentID;
+    private boolean editOuvert=false;//sert à savoir si l'ajout d'élément dans la liste est possible ou non
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.toolbar);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_main);
+        button = findViewById(R.id.btn);
+        list = findViewById(R.id.list);
+        btnAdd=findViewById(R.id.input);
+        db = new NotesDbAdapter(this);
+        db.open();
+        edit = findViewById(R.id.editText);
+        fillData();
+        button.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v){//affichage ou fermeture du champ d'input d'objet et de son bouton à l'appui du bouton
+                if (!editOuvert) {
+                    btnAdd.setVisibility(View.VISIBLE);
+                    edit.setVisibility(View.VISIBLE);
+                    button.setText("Annuler");
+                    editOuvert=true;
+                }
+                else{
+                    btnAdd.setVisibility(View.GONE);
+                    edit.setVisibility(View.GONE);
+                    button.setText("Ajouter");
+                    editOuvert=false;
+                }
+            }
+        });
+        btnAdd.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                if(edit.getText().toString() != ""){
+                    HandleTextContent();
+                    clearEditText();
+                }
+            }
+        });
+
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) { // si click longtemps sur un élément on affiche un menu qui permet d'enlever l'élement
+                showPopup(view, id); // passage de l'id en param pour supprimer dans la bdd
+                return false;
+            }
+        });
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {  // si click sur un élément on le raye ou on enlève la rayure
+                text = (TextView) view;
+                if(text.getPaintFlags()!=Paint.STRIKE_THRU_TEXT_FLAG) {
+                    text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);//ajoute la rayure
+                }
+                else{
+                    text.setPaintFlags(0);//supprime la rayure
+                }
             }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Voulez-vous tout effacer ?");
+        builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                clearList();
+                dialogInterface.cancel();
+            }
+        });
+        builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        return false;
+    }
 
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
+    void showPopup(View v, long id){
+        currentID = id;
+        PopupMenu popupMenu = new PopupMenu(this,v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.popup_menu);
+        popupMenu.show();
+    }
+    void clearEditText(){
+        edit.setText("");
+    }
 
-        return super.onOptionsItemSelected(item);
+    //vidage complet de la liste
+    void clearList(){
+        db.clearAll();
+        Toast.makeText(getApplicationContext(), "liste effacée", Toast.LENGTH_SHORT).show();
+        fillData();
+    }
+    // ajout d'un élément à la base de donnée
+    public void HandleTextContent(){
+        String editTextContent = edit.getText().toString();
+        db.createNote(editTextContent, "");
+        fillData();
+    }
+
+    // remplissage de la liste avec les infos de la bdd
+    private void fillData() {
+        // Get all of the notes from the database and create the item list
+        Cursor c = db.fetchAllNotes();
+        startManagingCursor(c);
+
+        String[] from = new String[] { NotesDbAdapter.KEY_TITLE};
+        int[] to = new int[] { android.R.id.text1 };
+
+        // Now create an array adapter and set it to display using our row
+        SimpleCursorAdapter notes =
+                new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, c, from, to,0);
+        list.setAdapter(notes);
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+    public boolean onMenuItemClick(MenuItem menuItem) { //effacement d'un item de la liste
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Voulez-vous vraiment effacer ?");
+        builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                db.deleteNote(currentID);
+                fillData();//appel pour refresh l'affichage après suppression
+            }
+        });
+        builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        return true;
     }
 }
