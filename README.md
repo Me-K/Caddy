@@ -4,7 +4,7 @@ __auteurs:__
 - Mehdi khalil
 - Guillaume Linez
 
-## fonctionnalités:
+## fonctionnalités envisagées:
 
 - __Créer des listes de courses nomables__
 
@@ -16,3 +16,11 @@ __auteurs:__
 - __Vider la liste courante__
 - __Trier la liste__ par ordre alphabétique ou par catégories
 - __Naviguer d'une liste à l'autre__ grâce à un liste qui contient le nom des listes crées
+
+
+## fonctionnalités réalisées:
+- Ajouter des objets à partir d'un champ de texte
+- Afficher/faire disparaitre le champ d'input avec un bouton
+- Rayer les éléments de la liste
+- Vider la liste avec confirmation
+- Supprimer un élement avec confirmation
