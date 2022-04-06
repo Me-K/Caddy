@@ -48,7 +48,6 @@ public class NotesDbAdapter {
      * Database creation sql statement
      */
     private static final String DATABASE_CREATE ="create table liste_produit (_id integer primary key autoincrement, nom_produit text not null, quantité int not null);";
-
     private static final String DATABASE_NAME = "DB_Caddy";
     private static final String DATABASE_TABLE = "liste_produit";
     private static final int DATABASE_VERSION = 2;
@@ -112,13 +111,13 @@ public class NotesDbAdapter {
      * a -1 to indicate failure.
      *
      * @param title the title of the note
-     * @param body the body of the note
+     * @param quantity amount of said object
      * @return rowId or -1 if failed
      */
-    public long createNote(String title, String body) {
+    public long createNote(String title, String quantity) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_TITLE, title);
-        initialValues.put(KEY_QUANTITY, body);
+        initialValues.put(KEY_QUANTITY, quantity);
 
         return mDb.insert(DATABASE_TABLE, null, initialValues);
     }

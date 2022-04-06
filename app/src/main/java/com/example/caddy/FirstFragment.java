@@ -25,16 +25,16 @@ public class FirstFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_first, container, false);
+        list = view.findViewById(R.id.list);
 
         //Var
-        list = getActivity().findViewById(R.id.list);
         db = new NotesDbAdapter(getActivity());
         db.open();
         //Valeur test
         db.createNote("Defaut 1", "1");
         db.createNote("Defaut 2", "2");
         db.createNote("Defaut 3", "3");
-        //fillData(); ça ne marche pas
+        fillData();
 
         return view;
 
