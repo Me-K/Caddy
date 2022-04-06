@@ -5,7 +5,7 @@ __auteurs:__
 - Guillaume Linez
 
 ## fonctionnalités envisagées:
-__ Le PDF de présentation est fait en rapport avec qui était envisagés et pas ce qui a été réalisé
+__Le PDF de présentation est fait en rapport avec qui était envisagés et pas ce qui a été réalisé
 
 - __Créer des listes de courses nomables__
 
