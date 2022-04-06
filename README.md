@@ -19,8 +19,8 @@ __auteurs:__
 
 
 ## fonctionnalités réalisées:
--Ajouter des objets à partir d'un champ de texte
--Afficher/faire disparaitre le champ d'input avec un bouton
--Rayer les éléments de la liste
--Vider la liste avec confirmation
--Supprimer un élement avec confirmation
+- Ajouter des objets à partir d'un champ de texte
+- Afficher/faire disparaitre le champ d'input avec un bouton
+- Rayer les éléments de la liste
+- Vider la liste avec confirmation
+- Supprimer un élement avec confirmation
