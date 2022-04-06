@@ -22,12 +22,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
-    private EditText edit;
+    private EditText edit;//champ d'ajout
     private ListView list;
-    private Button button;
-    private Button btnAdd;
+    private Button button;// bouton qui affiche le champ d'ajout
+    private Button btnAdd;// bouton de confirmation d'ajout
     private NotesDbAdapter db;
-    private TextView text;
+    private TextView text;//sert à barrer les éléments de la liste
     private long currentID;
     private boolean editOuvert=false;//sert à savoir si l'ajout d'élément dans la liste est possible ou non
 
@@ -77,14 +77,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         });
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {  // si click sur un élément on le raye ou on enlève la rayure
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {  // si click sur un élément on le raye
                 text = (TextView) view;
-                if(text.getPaintFlags()!=Paint.STRIKE_THRU_TEXT_FLAG) {
-                    text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);//ajoute la rayure
-                }
-                else{
-                    text.setPaintFlags(0);//supprime la rayure
-                }
+                text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);//ajoute la rayure
             }
         });
     }
