@@ -19,6 +19,7 @@ __auteurs:__
 
 
 ## fonctionnalités réalisées:
+- Base de donnée qui contient tout les produits entré par l'utilisateur
 - Ajouter des objets à partir d'un champ de texte
 - Afficher/faire disparaitre le champ d'input avec un bouton
 - Rayer les éléments de la liste
